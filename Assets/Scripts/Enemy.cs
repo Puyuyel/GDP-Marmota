@@ -6,16 +6,17 @@ public class Enemy : MonoBehaviour
     public int health = 50;
     public int damage = 10;
 
-    private Transform nexus;
+    private int _incomingDamage = 0;
+    private Transform _nexus;
 
     private void Start()
     {
-        nexus = GameObject.FindGameObjectWithTag("Nexus").transform;
+        _nexus = GameObject.FindGameObjectWithTag("Nexus").transform;
     }
 
     private void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, nexus.position, speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, _nexus.position, speed * Time.deltaTime);
     }
 
     public void TakeDamage(int damage)
@@ -25,6 +26,19 @@ public class Enemy : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public bool ReserveDamage(int damage)
+    {
+        if (_incomingDamage >= health) return false;
+        _incomingDamage += damage;
+        return true;
+    }
+
+    public void ConfirmHit(int amount)
+    {
+        _incomingDamage -= amount;
+        TakeDamage(amount);
     }
 
     void OnTriggerEnter2D(Collider2D collision)

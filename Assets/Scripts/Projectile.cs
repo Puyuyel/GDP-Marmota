@@ -33,7 +33,7 @@ public class Projectile : MonoBehaviour
 
             if(enemy != null)
             {
-                enemy.TakeDamage(damage);
+                enemy.ConfirmHit(damage);
             }
         }
 

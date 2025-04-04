@@ -10,7 +10,7 @@ public class Turret : MonoBehaviour
     public float detectionRange = 5f;
 
     private Coroutine _shootingCoroutine;
-    private float _damage;
+    private int _damage;
     private Transform _prevTarget;
 
     private void Start()
@@ -54,6 +54,7 @@ public class Turret : MonoBehaviour
 
                 for (int i = 0; i < projectilesNeeded; i++)
                 {
+                    if(!enemyScript.ReserveDamage(_damage)) break;
                     Shoot(target);
                     if (i == projectilesNeeded - 1) break;
                     yield return new WaitForSeconds(fireRate);
