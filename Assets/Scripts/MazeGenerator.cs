@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -5,12 +6,14 @@ public class MazeGenerator : MonoBehaviour
 {
     public int mazeWidth = 21;   // Número de celdas (no tiles)
     public int mazeHeight = 21;
-
+    
     public TileBase wallTile;         // groundTile: RuleTile que hace las paredes
     public TileBase backgroundTile;   // backgroundTile: solo decora el fondo
 
     public Tilemap wallTilemap;       // El que contiene paredes
     public Tilemap backgroundTilemap; // El que contiene fondo
+
+    public GameObject playerPrefab;
 
     private int[,] maze;
     private int blockSize = 3; // Caminos anchos (mínimo 3x3)
@@ -20,7 +23,8 @@ public class MazeGenerator : MonoBehaviour
         GenerateMaze();
         DrawMaze();
         CreateEntrance();
-        MoveCameraToEntrance();
+       // MoveCameraToEntrance();
+        SpawnPlayerAtEntrance();
     }
 
     void GenerateMaze()
@@ -112,7 +116,7 @@ public class MazeGenerator : MonoBehaviour
 
         for (int bx = 0; bx < blockSize; bx++)
         {
-            for (int by = 0; by <  2* blockSize; by++)
+            for (int by = -blockSize; by <  blockSize; by++)
             {
                 Vector3Int pos = new Vector3Int(tileStartX + bx, tileStartY + by, 0);
                 wallTilemap.SetTile(pos, null); // Eliminar paredes
@@ -123,18 +127,16 @@ public class MazeGenerator : MonoBehaviour
         maze[entranceCellX, entranceCellY] = 1;
     }
 
-    void MoveCameraToEntrance()
+    void SpawnPlayerAtEntrance()
     {
         int entranceCellX = mazeWidth / 2;
         int entranceCellY = mazeHeight - 1;
 
         float worldX = (entranceCellX + 0.5f) * blockSize;
-        float worldY = ((entranceCellY + 0.5f) * blockSize) - 3.5f;
+        float worldY = (entranceCellY + 0.5f) * blockSize;
 
-        Camera.main.transform.position = new Vector3(worldX, worldY, Camera.main.transform.position.z);
+        Instantiate(playerPrefab, new Vector3(worldX, worldY, 0), Quaternion.identity);
     }
-
-
     void Shuffle(int[] array)
     {
         for (int i = array.Length - 1; i > 0; i--)
