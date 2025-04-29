@@ -15,6 +15,9 @@ public class MazeGenerator : MonoBehaviour
 
     public GameObject playerPrefab;
 
+    public GameObject lootPrefab; // Asigna tu prefab del cofre aquí
+    [Range(0f, 1f)] public float lootSpawnChance = 0.05f; // Probabilidad de loot por celda de camino
+
     private int[,] maze;
     private int blockSize = 3; // Caminos anchos (mínimo 3x3)
 
@@ -22,9 +25,33 @@ public class MazeGenerator : MonoBehaviour
     {
         GenerateMaze();
         DrawMaze();
+        PlaceLoot();
         CreateEntrance();
        // MoveCameraToEntrance();
         SpawnPlayerAtEntrance();
+    }
+
+    void PlaceLoot()
+    {
+        for (int x = 0; x < mazeWidth; x++)
+        {
+            for (int y = 0; y < mazeHeight; y++)
+            {
+                if (maze[x, y] == 1 && Random.value < lootSpawnChance)
+                {
+                    float worldX = (x + 0.5f)* blockSize;
+                    float worldY = (y * blockSize) + 0.5f;
+                    Vector3 spawnPos = new Vector3(worldX, worldY, 0f);
+                    Vector3Int belowCell = wallTilemap.WorldToCell(spawnPos + Vector3.down * blockSize);
+
+                    // Solo instanciar si hay un tile debajo (es decir, si hay suelo)
+                    if (wallTilemap.HasTile(belowCell))
+                    {
+                        Instantiate(lootPrefab, spawnPos, Quaternion.identity);
+                    }
+                }
+            }
+        }
     }
 
     void GenerateMaze()
