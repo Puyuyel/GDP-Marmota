@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class LootPickup : MonoBehaviour
 {
-    public float pickupRadius = 1.5f; // Mismo radio que el picado
+    public float pickupRadius = 1.5f;
 
     private Transform player;
 
@@ -26,7 +26,6 @@ public class LootPickup : MonoBehaviour
     void CollectLoot()
     {
         Debug.Log("¡Cofre recogido!");
-        // Aquí puedes añadir inventario, efectos, sonido, etc.
         Destroy(gameObject);
     }
 

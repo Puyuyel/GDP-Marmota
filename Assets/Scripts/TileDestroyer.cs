@@ -4,11 +4,12 @@ using UnityEngine.Tilemaps;
 public class TileDestroyer : MonoBehaviour
 {
     public Tilemap groundTilemap;
-    public float reachDistance = 1.5f; // Radio para picar
-    public KeyCode destroyKey = KeyCode.Mouse0; // Click izquierdo
-    public float destroyCooldown = 0.2f; // Tiempo mínimo entre destrucciones
+    public float reachDistance = 1.5f;
+    public KeyCode destroyKey = KeyCode.Mouse0;
+    public float destroyCooldown = 0.2f;
 
     private float lastDestroyTime = -Mathf.Infinity;
+    private MazeGenerator mazeGenerator;
 
     void Start()
     {
@@ -16,6 +17,8 @@ public class TileDestroyer : MonoBehaviour
         {
             groundTilemap = GameObject.Find("GroundTilemap").GetComponent<Tilemap>();
         }
+
+        mazeGenerator = FindFirstObjectByType<MazeGenerator>();
     }
 
     void Update()
@@ -35,8 +38,14 @@ public class TileDestroyer : MonoBehaviour
 
                 if (groundTilemap.HasTile(cell))
                 {
+                    if (mazeGenerator != null && mazeGenerator.protectedTiles.Contains(cell))
+                    {
+                        // Tile protegido, no destruir
+                        break;
+                    }
+
                     groundTilemap.SetTile(cell, null);
-                    lastDestroyTime = Time.time; 
+                    lastDestroyTime = Time.time;
                     break;
                 }
             }

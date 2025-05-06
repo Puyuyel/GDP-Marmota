@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -6,20 +6,20 @@ public class MazeGenerator : MonoBehaviour
 {
     public int mazeWidth = 21;   // Número de celdas (no tiles)
     public int mazeHeight = 21;
-    
-    public TileBase wallTile;         // groundTile: RuleTile que hace las paredes
-    public TileBase backgroundTile;   // backgroundTile: solo decora el fondo
 
-    public Tilemap wallTilemap;       // El que contiene paredes
-    public Tilemap backgroundTilemap; // El que contiene fondo
+    public TileBase wallTile;         // RuleTile que hace las paredes
+    public TileBase backgroundTile;   // Solo decora el fondo
+
+    public Tilemap wallTilemap;       // Contiene paredes
+    public Tilemap backgroundTilemap; // Contiene fondo
 
     public GameObject playerPrefab;
+    public GameObject lootPrefab;     // Prefab del cofre
 
-    public GameObject lootPrefab; // Asigna tu prefab del cofre aquí
-    [Range(0f, 1f)] public float lootSpawnChance = 0.05f; // Probabilidad de loot por celda de camino
+    public HashSet<Vector3Int> protectedTiles = new HashSet<Vector3Int>();
 
     private int[,] maze;
-    private int blockSize = 3; // Caminos anchos (mínimo 3x3)
+    private int blockSize = 3;
 
     void Start()
     {
@@ -27,37 +27,12 @@ public class MazeGenerator : MonoBehaviour
         DrawMaze();
         PlaceLoot();
         CreateEntrance();
-       // MoveCameraToEntrance();
         SpawnPlayerAtEntrance();
-    }
-
-    void PlaceLoot()
-    {
-        for (int x = 0; x < mazeWidth; x++)
-        {
-            for (int y = 0; y < mazeHeight; y++)
-            {
-                if (maze[x, y] == 1 && Random.value < lootSpawnChance)
-                {
-                    float worldX = (x + 0.5f)* blockSize;
-                    float worldY = (y * blockSize) + 0.5f;
-                    Vector3 spawnPos = new Vector3(worldX, worldY, 0f);
-                    Vector3Int belowCell = wallTilemap.WorldToCell(spawnPos + Vector3.down * blockSize);
-
-                    // Solo instanciar si hay un tile debajo (es decir, si hay suelo)
-                    if (wallTilemap.HasTile(belowCell))
-                    {
-                        Instantiate(lootPrefab, spawnPos, Quaternion.identity);
-                    }
-                }
-            }
-        }
     }
 
     void GenerateMaze()
     {
         maze = new int[mazeWidth, mazeHeight];
-
         for (int x = 0; x < mazeWidth; x++)
             for (int y = 0; y < mazeHeight; y++)
                 maze[x, y] = 0;
@@ -77,10 +52,10 @@ public class MazeGenerator : MonoBehaviour
             int dx = 0, dy = 0;
             switch (dir)
             {
-                case 0: dx = 0; dy = 2; break;   // Arriba
-                case 1: dx = 2; dy = 0; break;   // Derecha
-                case 2: dx = 0; dy = -2; break;  // Abajo
-                case 3: dx = -2; dy = 0; break;  // Izquierda
+                case 0: dx = 0; dy = 2; break;
+                case 1: dx = 2; dy = 0; break;
+                case 2: dx = 0; dy = -2; break;
+                case 3: dx = -2; dy = 0; break;
             }
 
             int nx = x + dx;
@@ -102,17 +77,14 @@ public class MazeGenerator : MonoBehaviour
         int fullWidth = mazeWidth * blockSize;
         int fullHeight = mazeHeight * blockSize;
 
-        // Rellenar todo el fondo
         for (int x = 0; x < fullWidth; x++)
             for (int y = 0; y < fullHeight; y++)
                 backgroundTilemap.SetTile(new Vector3Int(x, y, 0), backgroundTile);
 
-        // Rellenar todo con paredes primero (por defecto)
         for (int x = 0; x < fullWidth; x++)
             for (int y = 0; y < fullHeight; y++)
                 wallTilemap.SetTile(new Vector3Int(x, y, 0), wallTile);
 
-        // "Borrar" zonas de camino (vaciar paredes para que se vea el fondo)
         for (int x = 0; x < mazeWidth; x++)
         {
             for (int y = 0; y < mazeHeight; y++)
@@ -125,13 +97,57 @@ public class MazeGenerator : MonoBehaviour
                         {
                             int px = x * blockSize + bx;
                             int py = y * blockSize + by;
-                            wallTilemap.SetTile(new Vector3Int(px, py, 0), null); // borrar pared
+                            wallTilemap.SetTile(new Vector3Int(px, py, 0), null);
                         }
                     }
                 }
             }
         }
     }
+
+    void PlaceLoot()
+    {
+        List<Vector2Int> walkableCells = new List<Vector2Int>();
+
+        // Recopilar todas las celdas de camino válidas (maze[x, y] == 1)
+        for (int x = 0; x < mazeWidth; x++)
+        {
+            for (int y = 0; y < mazeHeight; y++)
+            {
+                if (maze[x, y] == 1)
+                {
+                    walkableCells.Add(new Vector2Int(x, y));
+                }
+            }
+        }
+
+        // Barajar las celdas de camino para aleatorizar la elección
+        Shuffle(walkableCells);
+
+        int placedLoot = 0;
+        int lootCount = (mazeWidth * mazeHeight) / 50;
+        int maxLoot = Mathf.Min(lootCount, walkableCells.Count);
+
+        for (int i = 0; i < walkableCells.Count && placedLoot < maxLoot; i++)
+        {
+            Vector2Int cell = walkableCells[i];
+            float worldX = (cell.x + 0.5f) * blockSize;
+            float worldY = (cell.y + 0.5f) * blockSize;
+            Vector3 spawnPos = new Vector3(worldX, worldY - 1.0f, 0f);
+
+            // Comprobamos si hay un tile justo debajo (para que el cofre no flote)
+            Vector3Int belowCell = wallTilemap.WorldToCell(spawnPos + Vector3.down * 1.0f);
+            if (wallTilemap.HasTile(belowCell))
+            {
+                Instantiate(lootPrefab, spawnPos, Quaternion.identity);
+                protectedTiles.Add(belowCell);
+                placedLoot++;
+            }
+        }
+
+        Debug.Log($"Cofres generados: {placedLoot}");
+    }
+
 
     void CreateEntrance()
     {
@@ -143,14 +159,13 @@ public class MazeGenerator : MonoBehaviour
 
         for (int bx = 0; bx < blockSize; bx++)
         {
-            for (int by = -blockSize; by <  blockSize; by++)
+            for (int by = -blockSize; by < blockSize; by++)
             {
                 Vector3Int pos = new Vector3Int(tileStartX + bx, tileStartY + by, 0);
-                wallTilemap.SetTile(pos, null); // Eliminar paredes
+                wallTilemap.SetTile(pos, null);
             }
         }
 
-        // Marcarlo como camino por si quieres usarlo después
         maze[entranceCellX, entranceCellY] = 1;
     }
 
@@ -164,12 +179,22 @@ public class MazeGenerator : MonoBehaviour
 
         Instantiate(playerPrefab, new Vector3(worldX, worldY, 0), Quaternion.identity);
     }
+
     void Shuffle(int[] array)
     {
         for (int i = array.Length - 1; i > 0; i--)
         {
             int j = Random.Range(0, i + 1);
             (array[i], array[j]) = (array[j], array[i]);
+        }
+    }
+
+    void Shuffle(List<Vector2Int> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            (list[i], list[j]) = (list[j], list[i]);
         }
     }
 }

@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!43 &394038045
+--- !u!43 &790984307
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -954,7 +954,7 @@ MonoBehaviour:
     rid: 4379247598592065609
   m_ShadowCastingSource: 2
   m_ShadowMesh:
-    m_Mesh: {fileID: 394038045}
+    m_Mesh: {fileID: 790984307}
     m_LocalBounds:
       m_Center: {x: 0, y: 0, z: 0}
       m_Extent: {x: 0, y: 0, z: 0}
@@ -1095,7 +1095,6 @@ MonoBehaviour:
   backgroundTilemap: {fileID: 1040620098}
   playerPrefab: {fileID: 793579330945558998, guid: 6fbe081bbd0a3e340acafd797bbdaff9, type: 3}
   lootPrefab: {fileID: 4541813407058653620, guid: f84ec455fa7017c40a82fa957b4ab0dd, type: 3}
-  lootSpawnChance: 0.05
 --- !u!4 &2066045021
 Transform:
   m_ObjectHideFlags: 0
