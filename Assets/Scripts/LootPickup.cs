@@ -26,6 +26,7 @@ public class LootPickup : MonoBehaviour
     void CollectLoot()
     {
         Debug.Log("¡Cofre recogido!");
+        LootManager.Instance.AddLoot(1);
         Destroy(gameObject);
     }
 

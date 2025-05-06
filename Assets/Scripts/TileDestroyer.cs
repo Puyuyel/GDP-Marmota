@@ -23,7 +23,7 @@ public class TileDestroyer : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(destroyKey) && Time.time >= lastDestroyTime + destroyCooldown)
+        if (Input.GetKey(destroyKey) && Time.time >= lastDestroyTime + destroyCooldown)
         {
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mouseWorldPos.z = 0f;
