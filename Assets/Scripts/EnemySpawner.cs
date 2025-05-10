@@ -56,19 +56,10 @@ public class EnemySpawner : MonoBehaviour
     {
         float camWidth = mainCamera.orthographicSize * mainCamera.aspect;
         float camTop = 5f;
-        float camBottom = -15f;
         float spawnY;
 
-        int randomChoice = Random.Range(0, 2);
+        spawnY = camTop + spawnHeight;
 
-        if(randomChoice == 0)
-        {
-            spawnY = camTop + spawnHeight;
-        } else
-        {
-            spawnY = camBottom - spawnHeight;
-        }
-    
         float lerpFactor = Random.Range(0f, 1f);
         float minX = -Mathf.Lerp(trapezoidWidthBottom / 2, trapezoidWidthTop / 2, lerpFactor);
         float maxX = Mathf.Lerp(trapezoidWidthBottom / 2, trapezoidWidthTop / 2, lerpFactor);
