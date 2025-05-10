@@ -2029,7 +2029,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4127861727937252298, guid: be24666ace5158e49829656d826ee004, type: 3}
       propertyPath: delayBeforeFade
-      value: 10
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 7296406804456752810, guid: be24666ace5158e49829656d826ee004, type: 3}
       propertyPath: m_Name
