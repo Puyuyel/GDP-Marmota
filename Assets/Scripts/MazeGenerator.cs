@@ -28,6 +28,7 @@ public class MazeGenerator : MonoBehaviour
         PlaceLoot();
         CreateEntrance();
         SpawnPlayerAtEntrance();
+        AddColliderBoundaries();
     }
 
     void GenerateMaze()
@@ -196,5 +197,30 @@ public class MazeGenerator : MonoBehaviour
             int j = Random.Range(0, i + 1);
             (list[i], list[j]) = (list[j], list[i]);
         }
+    }
+    void AddColliderBoundaries()
+    {
+        float mazeWidthInUnits = mazeWidth * blockSize;
+        float mazeHeightInUnits = mazeHeight * blockSize;
+
+        // Borde superior
+        BoxCollider2D topCollider = gameObject.AddComponent<BoxCollider2D>();
+        topCollider.size = new Vector2(mazeWidthInUnits, blockSize);
+        topCollider.offset = new Vector2(mazeWidthInUnits / 2f, mazeHeightInUnits + blockSize / 2f);
+
+        // Borde inferior
+        BoxCollider2D bottomCollider = gameObject.AddComponent<BoxCollider2D>();
+        bottomCollider.size = new Vector2(mazeWidthInUnits, blockSize);
+        bottomCollider.offset = new Vector2(mazeWidthInUnits / 2f, -blockSize / 2f);
+
+        // Borde izquierdo
+        BoxCollider2D leftCollider = gameObject.AddComponent<BoxCollider2D>();
+        leftCollider.size = new Vector2(blockSize, mazeHeightInUnits);
+        leftCollider.offset = new Vector2(-blockSize / 2f, mazeHeightInUnits / 2f); 
+
+        // Borde derecho
+        BoxCollider2D rightCollider = gameObject.AddComponent<BoxCollider2D>();
+        rightCollider.size = new Vector2(blockSize, mazeHeightInUnits); 
+        rightCollider.offset = new Vector2(mazeWidthInUnits + blockSize / 2f, mazeHeightInUnits / 2f); 
     }
 }

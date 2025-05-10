@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4979668678026841601}
   - component: {fileID: 5600933443552740238}
   - component: {fileID: 7097618271294808882}
-  - component: {fileID: 7908272856722595828}
+  - component: {fileID: 7446845252869852427}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -176,7 +176,7 @@ MonoBehaviour:
   extraGravityMultiplier: 0.5
   fallMultiplier: 1
   jetpackForce: 4
-  maxFuel: 20
+  maxFuel: 10
   fuelBurnRate: 1
   fuelRegenRate: 2
   fuelSlider: {fileID: 8283826111847981839}
@@ -185,7 +185,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   jetpackDelayAfterJump: 0.1
---- !u!114 &7908272856722595828
+--- !u!114 &7446845252869852427
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -401,6 +401,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8199481049136171489}
   - component: {fileID: 2201989879920832285}
+  - component: {fileID: 3040429419157103881}
   m_Layer: 0
   m_Name: Light 2D
   m_TagString: Untagged
@@ -475,6 +476,26 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!114 &3040429419157103881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6237644165284255722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a70ad1d7ed99e043a2c7867c84f40a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lanternLight: {fileID: 2201989879920832285}
+  minIntensity: 0.5
+  maxIntensity: 1
+  minRadius: 3
+  maxRadius: 5
+  flickerSpeed: 1
+  movementSpeedThreshold: 1
+  smoothTime: 0.5
 --- !u!1 &6458472804010615012
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,7 +554,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

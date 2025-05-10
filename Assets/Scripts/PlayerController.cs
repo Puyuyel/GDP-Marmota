@@ -28,11 +28,9 @@ public class PlayerController2D : MonoBehaviour
     private Rigidbody2D rb;
     private bool isGrounded;
     private bool jumpRequested;
-    private bool useJetpack;
     private float moveInput;
     private float currentFuel;
     private float currentJetpackForce;
-    private float jetpackBlockTimer = 0f;
     public float jetpackDelayAfterJump = 0.2f;
     private bool jumpReleased = false;
     private bool jumpPressedLastFrame = false;
@@ -133,12 +131,6 @@ public class PlayerController2D : MonoBehaviour
                     rb.linearVelocity += Vector2.up * Physics2D.gravity.y * extraGravityMultiplier * Time.fixedDeltaTime;
                 }
             }
-        }
-
-        if (isGrounded && currentFuel < maxFuel)
-        {
-            currentFuel += fuelRegenRate * Time.fixedDeltaTime;
-            currentFuel = Mathf.Min(currentFuel, maxFuel);
         }
     }
 
