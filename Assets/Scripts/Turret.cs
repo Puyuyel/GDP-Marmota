@@ -109,9 +109,9 @@ public class Turret : MonoBehaviour
                viewportPoint.z > 0;
     }
 
-    public void ConfigurarMejoras(float velocidadDisparoBase, int dañoBase)
+    public void ConfigurarMejoras(float velocidadDisparoBase, int danoBase)
     {
         fireRate = velocidadDisparoBase;
-        _damage = dañoBase;
+        _damage = danoBase;
     }
 }

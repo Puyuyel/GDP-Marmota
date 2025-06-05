@@ -5,19 +5,19 @@ public class TiendaMejoras : MonoBehaviour
 {
     public List<Turret> torretas; // Referencias a torretas colocadas en el domo
     public float mejoraFireRate = 0.9f; // Reduce 10%
-    public int mejoraDaño = 5;
+    public int mejoraDano = 5;
 
     private float fireRateBase = 0.5f;
-    private int dañoBase = 20;
+    private int danoBase = 20;
 
-    // Llamado por el botón de Mejorar Daño
-    public void MejorarDaño()
+    // Llamado por el botï¿½n de Mejorar Daï¿½o
+    public void MejorarDano()
     {
-        dañoBase += mejoraDaño;
+        danoBase += mejoraDano;
         AplicarMejorasATodas();
     }
 
-    // Llamado por el botón de Mejorar Cadencia
+    // Llamado por el botï¿½n de Mejorar Cadencia
     public void MejorarCadencia()
     {
         fireRateBase *= mejoraFireRate;
@@ -30,7 +30,7 @@ public class TiendaMejoras : MonoBehaviour
         {
             if (t != null)
             {
-                t.ConfigurarMejoras(fireRateBase, dañoBase);
+                t.ConfigurarMejoras(fireRateBase, danoBase);
             }
         }
     }

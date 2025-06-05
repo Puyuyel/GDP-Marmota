@@ -7,11 +7,11 @@ public class MejoraTorreta : MonoBehaviour
     public Transform[] posicionesTorreta;
     private List<GameObject> torretas = new List<GameObject>();
 
-    public int dañoBase = 10;
+    public int danoBase = 10;
     public float velocidadDisparoBase = 1f;
 
     public int costoAgregarTorreta = 200;
-    public int costoMejorarDaño = 150;
+    public int costoMejorarDano = 150;
     public int costoMejorarVelocidad = 150;
 
     public void AgregarTorreta()
@@ -21,16 +21,16 @@ public class MejoraTorreta : MonoBehaviour
         {
             GameObject nueva = Instantiate(torretaPrefab, posicionesTorreta[torretas.Count].position, Quaternion.identity);
             torretas.Add(nueva);
-            nueva.GetComponent<Turret>().ConfigurarMejoras(velocidadDisparoBase, dañoBase);
+            nueva.GetComponent<Turret>().ConfigurarMejoras(velocidadDisparoBase, danoBase);
         }
     }
 
-    public void MejorarDaño()
+    public void MejorarDano()
     {
         PlayerStats stats = FindFirstObjectByType<PlayerStats>();
-        if (stats.GastarDinero(costoMejorarDaño))
+        if (stats.GastarDinero(costoMejorarDano))
         {
-            dañoBase += 5;
+            danoBase += 5;
             ActualizarTorretas();
         }
     }
@@ -40,7 +40,7 @@ public class MejoraTorreta : MonoBehaviour
         PlayerStats stats = FindFirstObjectByType<PlayerStats>();
         if (stats.GastarDinero(costoMejorarVelocidad))
         {
-            velocidadDisparoBase *= 0.9f; // disparamos más rápido
+            velocidadDisparoBase *= 0.9f; // disparamos mï¿½s rï¿½pido
             ActualizarTorretas();
         }
     }
@@ -49,7 +49,7 @@ public class MejoraTorreta : MonoBehaviour
     {
         foreach (GameObject torreta in torretas)
         {
-            torreta.GetComponent<Turret>().ConfigurarMejoras(velocidadDisparoBase, dañoBase);
+            torreta.GetComponent<Turret>().ConfigurarMejoras(velocidadDisparoBase, danoBase);
         }
     }
 }
